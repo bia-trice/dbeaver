@@ -1,222 +1,42 @@
---criação da base de dados
-create database aula16;
+select count (*) from film f
+inner join "language" l
+on l.language_id = l.language_id
+where l."name" = 'Português';
 
---crição de tabelas
-create table categoria(
-   categoria_id serial,
-   nome varchar(20),
-   ultima_atualizacao timestamp
-);
---comando para excluir tabela
---drop table categoria;
+select count (*) from "customer" c
+inner join "rental" r
+on r.customer_id = c.customer_id
+inner join "inventory" i
+on r.inventory_id = i.inventory_id
+inner join "film" f
+on i.film_id = f.film_id
+where f.film_id = 7;
 
-create table filme_categoria(
-    filme_id int,
-    categoria_id int,
-    ultima_atualizacao timestamp
-);
+select count (*) from rental r;
 
-create table filme (
-filme_id serial,
-titulo varchar(35),
-descricao text,
-ano_lancamento char(4),
-linguagem_id int,
-duracao_aluguel int,
-preco_aluguel numeric(4,2),
-duracao int,
-multa numeric(4,2),
-classificacao_indicativa int,
-ultima_atualizacao timestamp,
-ocasiao_especial text,
-sinopse text
-);
+select f.replacement_cost from film f
+where f.film_id = 600;
 
-create table linguagem (
-linguagem_id serial,
-nome varchar(20),
-ultima_atualizacao timestamp
-);
+select s.first_name, s.last_name from staff s 
+join rental r on s.staff_id = r.staff_id 
+group by s.first_name, s.last_name;
 
-create table ator_filme (
-ator_id int,
-filme_id int,
-ultima_atualizacao timestamp
-);
+select store_id, count(*) from staff
+group by store_id;
 
-create table inventario (
-inventario_id serial,
-)
+select s.first_name, s.last_name
+count (r.rental_id)
+from staff s 
+inner join rental r 
+on s.staff_id = r.staff_id
+group by s.first_name, s.last_name
+order by count (r.rental_id) 
+desc limit 1;
 
-create table aluguel (
-aluguel_id serial,
-data_aluguel timestamp,
-inventario_id int,
-cliente_id int,
-data_retorno timestamp,
-funcionario_id int,
-);
-
-create table pagamento (
-pagamento_id serial,
-cliente_id int,
-funcionario_id int,
-aluguel_id int,
-preco numeric(4,2),
-data_pagamento timestamp,
-);
-
-create table funcionario (
-funcionario_id serial,
-primeiro_nome varchar(20),
-ultimo_nome varchar(20),
-endereco_id int,
-email varchar(60),
-senha char(7),
-usuario varchar(20),
-loja_id int,
-ativo bool,
-ultima_atualizacao timestamp,
-foto bytea
-);
-
-create table ator (
-ator_id serial,
-primeiro_nome varchar(20),
-ultimo_nome varchar(20),
-ultima_atualizacao timestamp
-);
-
-create table cliente (
-cliente_id serial,
-loja_id int,
-primeiro_nome varchar(20),
-ultimo_nome varchar(20),
-endereco_id int,
-email varchar(60),
-data_criacao timestamp,
-ultima_atualizacao timestamp,
-ativo bool
-);
-
-create table endereco (
-endereco_id serial,
-endereco varchar(40),
-endereco2 varchar(40),
-distrito varchar(30),
-cidade_id int,
-cep char(8),
-telefone char(11),
-ultima_atualizacao timestamp
-);
-
-create table cidade (
-cidade_id serial,
-cidade varchar(30),
-pais_id int,
-ultima_atualizacao timestamp
-);
-
-create table pais (
-pais_id serial,
-pais varchar(20),
-ultima_atualizacao timestamp,
-);
-
-create table loja (
-loja_id serial,
-chefe_equipe_id int,
-endereco_id int,
-ultima_atualizacao timestamp
-
---remover coluna
-alter table loja drop column ultima_atualizacao;
-
---adicionar coluna
-alter table loja add column ultima_atualizacao timestamp;
-
---renomear coluna
-alter table loja rename column ult_atual
-to ultima_atualizacao;
-
---alterar o tipo de dado da coluna
-alter table loja alter column ultima_atualizacao
-set data type timestamp;
-
---criação de chaves primárias
-alter table categoria add primary key (categoria_id);
-alter table filme add primary key (filme_id);
-alter table linguagem add primary key (linguagem_id);
-alter table inventario add primary key (inventario_id);
-alter table pais add primary key (pais_id);
-alter table ator add primary key (ator_id);
-alter table cidade add primary key (cidade_id);
-alter table loja add primary key (loja_id);
-alter table pagamento add primary key (pagamento_id);
-alter table endereco add primary key (endereco_id);
-alter table cliente add primary key (cliente_id);
-alter table funcionario add primary key (funcionario_id);
-alter table aluguel add primary key (aluguel_id);
-
---criação de chaves estrangeiras
-alter table filme_categoria
-add constraint fk_categoria
-foreign key (categoria_id)
-references categoria(categoria_id);
-
-alter table filme_categoria
-add constraint fk_filme
-foreign key (filme_id)
-references filme(filme_id);
-
-alter table filme categoria
-add constraint fk categoria 
-foreign key (categoria_id)
-references categoria (categoria_id);
-
-alter table filme_ categoria 
-add constraint fk filme 
-foreign key (filme_id)
-references filme (filme_id);
-
-alter table filme
-add constraint fk linguagem 
-foreign key (linguagem_ id)
-references linguagem (linguagem_id);
-
-alter table filme
-add constraint fk linguagem
-foreign key (linguagem id)
-references linguagem (linguagem_1d);
-
-alter table ator filme 
-add constraint fk ator foreign key (ator_id)
-references ator (ator_ 1d);
-
-alter table ator filme 
-add constraint fk filme 
-foreign key (filme id) 
-references filme (filme id);
-
-alter table inventario --tabela que possui a chave estrangeira
-add constraint fk_filme --adiciona restrição na tabela a ser alterada
-foreign key (filme id) --define a chave estrangeira na tabela a ser alterada
-references filme (filme id); --referencia a tabela que possui a chave primária
-
-alter table aluguel
-add constraint fk_inventario 
-foreign key (inventario_id) 
-references inventario (inventario) id);
-
-alter table pagamento
-add constraint fk_ aluguel 
-foreign key (aluguel _id)
-references aluguel (aluguel_id);
-
-alter table pagamento
-add constraint fk funcionario 
-foreign key (funcionario_id)
-references funcionario (funcionario_id);
-
-
-
+select a.address, count (*)
+from staff sta
+inner join store sto on
+sta.store_id = sto.store_id 
+inner join address a on
+a.address_id = sto.address_id 
+group a.address;
